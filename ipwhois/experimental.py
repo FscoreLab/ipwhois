@@ -144,7 +144,7 @@ def bulk_lookup_rdap(addresses=None, inc_raw=False, retry_count=3, depth=0,
     Returns:
         namedtuple:
 
-        :results (dict): IP address keys with the values as dictionaries
+        :final_results (dict): IP address keys with the values as dictionaries
             returned by IPWhois.lookup_rdap().
         :stats (dict): Stats for the lookups:
 
@@ -189,7 +189,7 @@ def bulk_lookup_rdap(addresses=None, inc_raw=False, retry_count=3, depth=0,
         raise ValueError('addresses must be a list of IP address strings')
 
     # Initialize the dicts/lists
-    results = {}
+    final_results = {}
     failed_lookups_dict = {}
     rated_lookups = []
     stats = {
@@ -373,8 +373,8 @@ def bulk_lookup_rdap(addresses=None, inc_raw=False, retry_count=3, depth=0,
                         # Lookup was successful, add to result. Set the nir
                         # key to None as this is not supported
                         # (yet - requires more queries)
-                        results[ip] = results
-                        results[ip]['nir'] = None
+                        final_results[ip] = results
+                        final_results[ip]['nir'] = None
 
                         # Remove the IP from the lookup queue
                         del asn_parsed_results[ip]
@@ -454,4 +454,4 @@ def bulk_lookup_rdap(addresses=None, inc_raw=False, retry_count=3, depth=0,
                         break
 
     return_tuple = namedtuple('return_tuple', ['results', 'stats'])
-    return return_tuple(results, stats)
+    return return_tuple(final_results, stats)
